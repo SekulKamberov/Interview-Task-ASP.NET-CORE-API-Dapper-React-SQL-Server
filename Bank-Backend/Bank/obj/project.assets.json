@@ -3003,11 +3003,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sekne\\Desktop\\POSTBANK\\Bank-Backend\\Bank\\Bank.csproj",
+      "projectUniqueName": "C:\\Users\\sekne\\OneDrive\\Documents\\GitHub\\Interview-Task-ASP.NET-CORE-API-Dapper-React-SQL-Server\\Bank-Backend\\Bank\\Bank.csproj",
       "projectName": "Bank",
-      "projectPath": "C:\\Users\\sekne\\Desktop\\POSTBANK\\Bank-Backend\\Bank\\Bank.csproj",
+      "projectPath": "C:\\Users\\sekne\\OneDrive\\Documents\\GitHub\\Interview-Task-ASP.NET-CORE-API-Dapper-React-SQL-Server\\Bank-Backend\\Bank\\Bank.csproj",
       "packagesPath": "C:\\Users\\sekne\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sekne\\Desktop\\POSTBANK\\Bank-Backend\\Bank\\obj\\",
+      "outputPath": "C:\\Users\\sekne\\OneDrive\\Documents\\GitHub\\Interview-Task-ASP.NET-CORE-API-Dapper-React-SQL-Server\\Bank-Backend\\Bank\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\sekne\\AppData\\Roaming\\NuGet\\NuGet.Config",

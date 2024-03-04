@@ -32,7 +32,7 @@ namespace Bank.Controllers
             } 
         }
 
-        [HttpGet("{2}/{20}")]
+        [HttpGet("{page}/{limit}")]
         public async Task<UserResult> GetUsers(
             int? page,
             int? limit)
