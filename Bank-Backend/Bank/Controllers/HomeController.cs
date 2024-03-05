@@ -4,7 +4,10 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Data;
+using static Humanizer.In;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Bank.Controllers
 {
@@ -32,20 +35,38 @@ namespace Bank.Controllers
             } 
         }
 
-        [HttpGet("{page}/{limit}")]
-        public async Task<UserResult> GetUsers(
-            int? page,
-            int? limit)
+        [HttpGet("{page}/{limit}/{startDate}/{endDate}")]  
+        public List<UserViewModel> GetUsers(int? limit, int? page, DateTime? startDate, DateTime? endDate)
         {
-            var connection = new SqlConnection(connectionString);
-            using var multi = await connection.QueryMultipleAsync(
-                "uspGetUsers",
-                new { page, limit },
-                commandType: CommandType.StoredProcedure
-            );
-            var users = await multi.ReadAsync<User>();
-            var paginationData = await multi.ReadFirstAsync<PaginationData>();
-            return new UserResult { Users = users, PaginationData = paginationData };
+            var result = new List<UserViewModel>();
+            try
+            {
+                var connection = new SqlConnection(connectionString); 
+               
+                var values = new { limit, page }; //  uspGetUsers
+                var results = connection.Query("uspGetUsersSortFilt", values, commandType: CommandType.StoredProcedure)
+                    .Select(r =>  new UserViewModel
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        Sirname = r.Sirname,
+                        Email = r.Email,
+                        Project = r.ProjectName,
+                        Created = r.Created,
+                        Hours = r.Hours
+                    }
+                    ).ToList();
+
+                //var paginationData = await multi.ReadFirstAsync<PaginationData>();
+
+                //return new UserResult { Users = users, PaginationData = paginationData };
+                return results;
+            }
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;// new UserResult();
         }
 
         [HttpGet]

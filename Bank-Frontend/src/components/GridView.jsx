@@ -8,37 +8,13 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Button } from '@mui/material'  
 
 import moment from 'moment'
-
-var filterParams = {
-  comparator: (filterLocalDateAtMidnight, cellValue) => {
-    var dateAsString = cellValue;
-    if (dateAsString == null) return -1
-    var dateParts = dateAsString.split('/')
-    var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    );
-    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-      return 0
-    }
-    if (cellDate < filterLocalDateAtMidnight) {
-      return -1
-    }
-    if (cellDate > filterLocalDateAtMidnight) {
-      return 1
-    }
-    return 0
-  },
-  minValidYear: 2000,
-  maxValidYear: 2021,
-  inRangeFloatingFilterDateFormat: 'Do MMM YYYY',
-}
+ 
 
 const GridView = (props) => {
   const { displayUserHours } = props
   const containerStyle = useMemo(() => ({ width: '100%', height: '500px' }), [])
   const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), [])
+  const limit = 10
 
   const [rowData, setRowData] = useState()
 
@@ -85,12 +61,27 @@ const GridView = (props) => {
     }
   }, [])
   
-const onGridReady = useCallback((params) => {
-    fetch('https://localhost:7186/api/home/GetInit')
-      .then((resp) => resp.json())
-      .then((data) =>  
-        setRowData(data)
-      )
+const onGridReady = useCallback((params) => { 
+  //console.log('params.endRow', params.api) 
+    const page = 1 /// limit 
+  
+    const startDate = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss')
+    const endDate = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss')
+
+    fetch(`https://localhost:7186/api/home/GetUsers/${page}/${limit}/${startDate}/${endDate}`)
+      .then(resp => resp.json())
+      .then(res => { 
+        setRowData(res) 
+      
+        console.log('res =>', res)
+      }).catch(err => {
+        //params.successCallback([], 0);
+        console.log(err)
+      }) 
+    //.then((resp) => resp.json())
+    //  .then((data) =>  
+      //  setRowData(data)
+      //)
   }, [])  
 
   //console.log('rowData =>', rowData)
@@ -106,10 +97,14 @@ const onGridReady = useCallback((params) => {
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
+          //rowModelType={'infinite'}
           onGridReady={onGridReady} 
           //rowModelType={rowModelType} 
           pagination={true} 
-          paginationPageSize={10}  
+          //paginationPageSize={10}   
+          //cacheBlockSize={10}  
+          paginationPageSize={limit}
+          cacheBlockSize={limit}
         />
       </div>
     </div>
